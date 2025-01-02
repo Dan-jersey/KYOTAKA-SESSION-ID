@@ -13,8 +13,8 @@ const { Boom } = require("@hapi/boom");
 const PORT = process.env.PORT ||  5000
 const MESSAGE = process.env.MESSAGE ||  `
 ┌───⭓『
-❒ *WASI-MD*
-❒ _NOW DEPLOY IT_
+❒ *KYOTAKA-MD*
+❒ _MAINTENANT DEPLOYER-LE_
 └────────────⭓
 ┌───⭓
 ❒  • Chat with owner •
