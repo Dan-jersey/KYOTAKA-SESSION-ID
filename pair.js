@@ -57,34 +57,34 @@ router.get('/', async (req, res) => {
                let session = await Pair_Code_By_Gifted_Tech.sendMessage(Pair_Code_By_Gifted_Tech.user.id, { text: '' + b64data });
 
                let GIFTED_MD_TEXT = `
-*_Pair Code Connected by WASI TECH*
-*_Made With 🤍_*
+*_KYOTAKA PAIR CODE EST CONNECTÉ_*
+*_Made Dan jersey_*
 ______________________________________
 ╔════◇
-║ *『 WOW YOU'VE CHOSEN WASI MD 』*
-║ _You Have Completed the First Step to Deploy a Whatsapp Bot._
+║ *『 MERCI D'AVOIR CHOISI KYOTAKA-MD 』*
+║ _Vous venez de compléter la première partie de la création de KYOTAKA-MD ._
 ╚════════════════════════╝
 ╔═════◇
 ║  『••• 𝗩𝗶𝘀𝗶𝘁 𝗙𝗼𝗿 𝗛𝗲𝗹𝗽 •••』
-║❒ *Ytube:* _youtube.com/@wasitech1_
-║❒ *Owner:* _https://wa.me/923192173398_
-║❒ *Repo:* _https://github.com/wasixd/WASI-MD
-║❒ *WaGroup:* _https://whatsapp.com/channel/0029VaDK8ZUDjiOhwFS1cP2j
-║❒ *WaChannel:* _https://whatsapp.com/channel/0029VaDK8ZUDjiOhwFS1cP2j
+║❒ *Ytube:* _https://www.youtube.com/@the_developpeur-k_
+║❒ *Owner:* _https://wa.me/243833389567
+║❒ *Repo:* _https://github.com/Dan-jersey/KYOTAKA-MD/tree/main
+║❒ *WaGroup:* _https://chat.whatsapp.com/Fe8tUAkLxnpKaUVxlcBFVS
+║❒ *WaChannel:* _https://whatsapp.com/channel/0029VasZ6FaHLHQbLdUKfh33
 ║❒ *Plugins:* _https://github.com/wasixd/WASI-MD-PLUGINS_
 ╚════════════════════════╝
 _____________________________________
 
-_Don't Forget To Give Star To My Repo_`
+_N'oubliez pas de donner une étoile à mon dépôt_`
  await Pair_Code_By_Gifted_Tech.sendMessage(Pair_Code_By_Gifted_Tech.user.id,{text:GIFTED_MD_TEXT},{quoted:session})
  
 
         await delay(100);
-        await Pair_Code_By_Gifted_Tech.ws.close();
+        await Pair_Code_By_KYOTAKA_Tech.ws.close();
         return await removeFile('./temp/'+id);
             } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
                     await delay(10000);
-                    GIFTED_MD_PAIR_CODE();
+                    KYOTAKA_MD_PAIR_CODE();
                 }
             });
         } catch (err) {
@@ -95,6 +95,6 @@ _Don't Forget To Give Star To My Repo_`
          }
         }
     }
-    return await GIFTED_MD_PAIR_CODE()
+    return await KYOTAKA_MD_PAIR_CODE()
 });
-module.exports = router
+module.exports = route
