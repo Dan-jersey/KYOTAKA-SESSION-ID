@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pair Code</title>
+  <title>KYOTAKA PAIR CODE</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     body {
@@ -12,8 +12,9 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background: black;
+      background: linear-gradient(to right,orangered,red);
       font-family: Arial, sans-serif;
+      color:white;
     }
 
     .container {
@@ -49,7 +50,7 @@
 
     .input-container {
       display: flex;
-      background: rgb(10, 10, 10);
+      background:rgb(10, 10, 10);
       border-radius: 1rem;
       background: black;
       box-shadow: black;
@@ -68,7 +69,7 @@
       padding: 1rem;
       border: none;
       border-left: 2px solid #ecf2f8;
-      color: #000000;
+      color: #000080;
       transition: all 0.2s ease-in-out;
     }
 
@@ -81,7 +82,7 @@
     .input-container button {
       flex-basis: 15%;
       padding: 1rem;
-      background: #5935ac;
+      background: orangered;
       font-weight: 700;
       letter-spacing: 0.3rem;
       text-transform: uppercase;
@@ -93,7 +94,7 @@
     }
 
     .input-container button:hover {
-      background: linear-gradient(135deg, #c01736 0%, #8b17b6 100%);
+      background: linear-gradient(to right,orangered 0%,blue 100%);
     }
 
     @media (max-width: 500px) {
@@ -142,16 +143,16 @@
         <div id="text">
           <i class="fa fa-user"></i>
           <p>
-            <h3 class="centered-text">WASITECH PAIRING CODE</h3>
+            <h3>KYOTAKA PAIRING CODE</h3>
             <br>
-            <h6>Made By WASI TECH🔥.</h6>
-            <h6>Enter Your Number with Country Code.</h6>
+            <h6>fait par Dan jersey 🧑‍💻.</h6>
+            <h6>Entrez votre numéro de téléphone .</h6>
             <div class="input-container">
-              <input placeholder="923192173xxx" type="number" id="number" placeholder="Enter your Phone Pumber with Cuntry Code" name="">
-              <button id="submit">Submit</button>
+              <input placeholder="24383338xxxx" type="number" id="number" placeholder="entrez votre numéro WhatsApp " name="">
+              <button id="submit">envoyer</button>
             </div>
             
-            <a id="waiting-message" class="centered-text" style="display: none;">Please wait a while</a>
+            <a id="waiting-message" class="centered-text" style="display: none;">veuillez patienter...</a>
             <br>
             <br>
             <main id="pair"></main>
@@ -184,9 +185,9 @@
     b.addEventListener("click", async (e) => {
       e.preventDefault();
       if (!c.value) {
-        a.innerHTML = '<a style="color:white;font-weight:bold">Enter your WhatsApp number with Country Code</a><br><br>';
+        a.innerHTML = '<a style="color:white;font-weight:bold">Entrez votre numéro WhatsApp avec votre code postal </a><br><br>';
       } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<a style="color:red;font-weight:bold">Invalid Number</a><br><br>';
+        a.innerHTML = '<a style="color:red;font-weight:bold">le numéro est invalide</a><br><br>';
       } else {
         const Wasi_Tech = c.value.replace(/[^0-9]/g, "");
         let bb = "";
@@ -213,4 +214,4 @@
     });
   </script>
 </body>
-</html>
+  </html
