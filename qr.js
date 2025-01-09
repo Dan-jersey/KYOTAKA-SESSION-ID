@@ -1,127 +1,145 @@
-//copy code? pls put my github name as credit
-//🖕 to those who copy without credit
-const makeWASocket = require("@whiskeysockets/baileys").default
-const qrcode = require("qrcode-terminal")
-const fs = require('fs')
-const pino = require('pino')
-const { delay, useMultiFileAuthState, BufferJSON, fetchLatestBaileysVersion, PHONENUMBER_MCC, DisconnectReason, makeInMemoryStore, jidNormalizedUser, makeCacheableSignalKeyStore } = require("@whiskeysockets/baileys")
-const Pino = require("pino")
-const NodeCache = require("node-cache")
-const chalk = require("chalk")
-const readline = require("readline")
-const { parsePhoneNumber } = require("libphonenumber-js")
+// Perfect QR Code Generator for WhatsApp Bot
+// Designed for maximum efficiency, security, and clarity
 
+const express = require("express");
+const pino = require("pino");
+const { toBuffer } = require("qrcode");
+const path = require("path");
+const fs = require("fs-extra");
+const { Boom } = require("@hapi/boom");
+const {
+    default: WasiWASocket,
+    useMultiFileAuthState,
+    Browsers,
+    delay,
+    DisconnectReason,
+    makeInMemoryStore,
+} = require("@whiskeysockets/baileys");
 
-let phoneNumber = "916909137213"
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code")
-const useMobile = process.argv.includes("--mobile")
+// Default message for user
+const MESSAGE = `
+┌───⭓『
+❒ *WASI-MD*
+❒ _NOW DEPLOY IT_
+└────────────⭓
+┌───⭓
+❒  • Chat with owner •
+❒ *GitHub:* __https://github.com/WASI-MD_
+❒ *Author:* _wa.me/923192173398_
+❒ *YT:* _https://youtube.com/@wasitech10_
+└────────────⭓
+`;
 
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-const question = (text) => new Promise((resolve) => rl.question(text, resolve))
+// Paths and directories
+const AUTH_DIR = path.join(__dirname, "auth_info_baileys");
+const CLEANUP_MESSAGE = "Authentication folder cleaned and ready for a new session.";
 
-
-  async function qr() {
-//------------------------------------------------------
-let { version, isLatest } = await fetchLatestBaileysVersion()
-const {  state, saveCreds } =await useMultiFileAuthState(`./sessions`)
-    const msgRetryCounterCache = new NodeCache() // for retry message, "waiting message"
-    const XeonBotInc = makeWASocket({
-        logger: pino({ level: 'silent' }),
-        printQRInTerminal: !pairingCode, // popping up QR in terminal log
-      mobile: useMobile, // mobile api (prone to bans)
-      browser: ['Chrome (Linux)', '', ''], // for this issues https://github.com/WhiskeySockets/Baileys/issues/328
-     auth: {
-         creds: state.creds,
-         keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
-      },
-      browser: ['Chrome (Linux)', '', ''], // for this issues https://github.com/WhiskeySockets/Baileys/issues/328
-      markOnlineOnConnect: true, // set false for offline
-      generateHighQualityLinkPreview: true, // make high preview link
-      getMessage: async (key) => {
-         let jid = jidNormalizedUser(key.remoteJid)
-         let msg = await store.loadMessage(jid, key.id)
-
-         return msg?.message || ""
-      },
-      msgRetryCounterCache, // Resolve waiting messages
-      defaultQueryTimeoutMs: undefined, // for this issues https://github.com/WhiskeySockets/Baileys/issues/276
-   })
-
-
-    // login use pairing code
-   // source code https://github.com/WhiskeySockets/Baileys/blob/master/Example/example.ts#L61
-   if (pairingCode && !XeonBotInc.authState.creds.registered) {
-      if (useMobile) throw new Error('Cannot use pairing code with mobile api')
-
-      let phoneNumber
-      if (!!phoneNumber) {
-         phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
-
-         if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) {
-            console.log(chalk.bgBlack(chalk.redBright("Start with country code of your WhatsApp Number, Example : +916909137213")))
-            process.exit(0)
-         }
-      } else {
-         phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFor example: +916909137213 : `)))
-         phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
-
-         // Ask again when entering the wrong number
-         if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) {
-            console.log(chalk.bgBlack(chalk.redBright("Start with country code of your WhatsApp Number, Example : +916909137213")))
-
-            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFor example: +916909137213 : `)))
-            phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
-            rl.close()
-         }
-      }
-
-      setTimeout(async () => {
-         let code = await XeonBotInc.requestPairingCode(phoneNumber)
-         code = code?.match(/.{1,4}/g)?.join("-") || code
-         console.log(chalk.black(chalk.bgGreen(`Your Pairing Code : `)), chalk.black(chalk.white(code)))
-      }, 3000)
-   }
-//------------------------------------------------------
-    XeonBotInc.ev.on("connection.update",async  (s) => {
-        const { connection, lastDisconnect } = s
-        if (connection == "open") {
-            await delay(1000 * 10)
-            await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `🪀Support/Contact Developer\n\n\n⎆Donate: https://i.ibb.co/w46VQ8D/Picsart-22-10-08-06-46-30-674.jpg\n\n⎆YouTube: https://youtube.com/@DGXeon\n\n⎆Telegram Channel: https://t.me/xeonbotinc\n\n⎆Telegram Chat: https://t.me/+AYOyJflnt-AzNGFl\n\n⎆WhatsApp Gc1: https://chat.whatsapp.com/Kjm8rnDFcpb04gQNSTbW2d\n\n⎆WhatsApp Gc2: https://chat.whatsapp.com/EEOnU0V7dl9HF1mMFO8QWa\n\n⎆WhatsApp Gc3: https://chat.whatsapp.com/Dh0lD0Ee5hN1JMFXNqtxSG\n\n⎆WhatsApp Pm: Wa.me/916909137213\n\n⎆Instagram: https://instagram.com/unicorn_xeon13\n\n⎆GitHub: https://github.com/DGXeon/\n\n⎆Blog: https://dreamguyxeonfiles.blogspot.com/2022/05/bots%20whatsapp%20mods.html?m=1\n\n\n` });
-            let sessionXeon = fs.readFileSync('./sessions/creds.json');
-            await delay(1000 * 2) 
-             const xeonses = await  XeonBotInc.sendMessage(XeonBotInc.user.id, { document: sessionXeon, mimetype: `application/json`, fileName: `creds.json` })
-             await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `⚠️Do not share this file with anybody⚠️\n
-┌─❖
-│ Ohayo 😽
-└┬❖  
-┌┤✑  Thanks for using X-PairCode
-│└────────────┈ ⳹        
-│©2020-2023 XeonBotInc 
-└─────────────────┈ ⳹\n\n ` }, {quoted: xeonses});
-              await delay(1000 * 2) 
-              process.exit(0)
-        }
-        if (
-            connection === "close" &&
-            lastDisconnect &&
-            lastDisconnect.error &&
-            lastDisconnect.error.output.statusCode != 401
-        ) {
-            qr()
-        }
-    })
-    XeonBotInc.ev.on('creds.update', saveCreds)
-    XeonBotInc.ev.on("messages.upsert",  () => { })
+// Clean authentication folder
+if (fs.existsSync(AUTH_DIR)) {
+    fs.emptyDirSync(AUTH_DIR);
+    console.log(CLEANUP_MESSAGE);
 }
-qr()
 
-process.on('uncaughtException', function (err) {
-let e = String(err)
-if (e.includes("Socket connection timeout")) return
-if (e.includes("rate-overlimit")) return
-if (e.includes("Connection Closed")) return
-if (e.includes("Timed Out")) return
-if (e.includes("Value not found")) return
-console.log('Caught exception: ', err)
+// Core function to handle WhatsApp connection
+async function initializeWhatsApp(res) {
+    console.log("Initializing WhatsApp connection...");
+    const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
+
+    const socket = WasiWASocket({
+        printQRInTerminal: false,
+        logger: pino({ level: "silent" }),
+        browser: [Browsers.Chrome, "Windows 10", "Chrome/108.0.0.0"],
+        auth: state,
+    });
+
+    // Event listener for connection updates
+    socket.ev.on("connection.update", async (update) => {
+        const { connection, lastDisconnect, qr } = update;
+
+        if (qr) {
+            console.log("QR code generated. Scan to authenticate.");
+            res.end(await toBuffer(qr)); // Send QR code as response
+        }
+
+        if (connection === "open") {
+            console.log("WhatsApp connection established!");
+            await handleSuccessfulConnection(socket);
+        }
+
+        if (connection === "close") {
+            const reason = new Boom(lastDisconnect?.error)?.output.statusCode;
+            handleDisconnection(reason, res, socket);
+        }
+    });
+
+    // Save credentials on update
+    socket.ev.on("creds.update", saveCreds);
 }
+
+// Handle successful WhatsApp connection
+async function handleSuccessfulConnection(socket) {
+    try {
+        const user = socket.user.id;
+        const creds = fs.readFileSync(path.join(AUTH_DIR, "creds.json"));
+        const sessionId = Buffer.from(creds).toString("base64");
+
+        console.log(`
+==================== SESSION ID ==========================
+SESSION-ID ==> ${sessionId}
+==========================================================
+        `);
+
+        // Send session ID and default message
+        const initialMessage = await socket.sendMessage(user, { text: sessionId });
+        await socket.sendMessage(user, { text: MESSAGE }, { quoted: initialMessage });
+
+        // Clean up authentication folder for security
+        await delay(1000);
+        fs.emptyDirSync(AUTH_DIR);
+        console.log(CLEANUP_MESSAGE);
+    } catch (error) {
+        console.error("Error during successful connection handling:", error);
+    }
+}
+
+// Handle disconnections and retry logic
+function handleDisconnection(reason, res, socket) {
+    switch (reason) {
+        case DisconnectReason.connectionClosed:
+            console.log("Connection closed. Reconnecting...");
+            initializeWhatsApp(res);
+            break;
+        case DisconnectReason.connectionLost:
+            console.log("Connection lost. Retrying...");
+            initializeWhatsApp(res);
+            break;
+        case DisconnectReason.restartRequired:
+            console.log("Restart required. Restarting...");
+            initializeWhatsApp(res);
+            break;
+        case DisconnectReason.timedOut:
+            console.log("Connection timed out. Retrying...");
+            initializeWhatsApp(res);
+            break;
+        default:
+            console.error("Unexpected disconnection. Reason:", reason);
+            break;
+    }
+}
+
+// Main endpoint for QR code generation
+app.use("/", (req, res) => {
+    console.log("Incoming request received.");
+    initializeWhatsApp(res).catch((error) => {
+        console.error("Error initializing WhatsApp:", error);
+        res.status(500).send("Failed to initialize WhatsApp connection.");
+    });
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+})
